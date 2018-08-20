@@ -1,5 +1,7 @@
 <?php
-class Lance 
+namespace App;
+
+class Lance
 {
 	private $usuario;
 	private $valor;
