@@ -6,6 +6,7 @@ use App\Lance;
 use App\FiltroDeLances;
 
 use PHPUnit\Framework\TestCase;
+use App\Leilao;
 
 class FiltroDeLancesTest extends TestCase
 {
@@ -80,6 +81,36 @@ class FiltroDeLancesTest extends TestCase
             new Lance($joao, 4000),
             new Lance($joao, 3500),
         ]);
+
         $this->assertEquals(0, count($resultado));
+    }
+
+    public function testDeveDarNoMaximo5Lances()
+    {
+        $leilao = new Leilao('Notebook dell');
+
+        $jobs = new Usuario('Jobs');
+        $gates = new Usuario('Gates');
+
+        $leilao->propoe(new Lance($jobs, 2000));
+        $leilao->propoe(new Lance($gates, 2100));
+
+        $leilao->propoe(new Lance($jobs, 2200));
+        $leilao->propoe(new Lance($gates, 2300));
+
+        $leilao->propoe(new Lance($jobs, 2400));
+        $leilao->propoe(new Lance($gates, 2500));
+
+        $leilao->propoe(new Lance($jobs, 2600));
+        $leilao->propoe(new Lance($gates, 2700));
+
+        $leilao->propoe(new Lance($jobs, 2800));
+        $leilao->propoe(new Lance($gates, 3000));
+
+        $leilao->propoe(new Lance($jobs, 3100));
+
+        $this->assertEquals(10, count($leilao->getLances()));
+
+        $this->assertEquals(3000, $leilao->getLances()[9]->getValor());
     }
 }
