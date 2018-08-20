@@ -5,7 +5,7 @@ class Avaliador
 {
     private $maiorDeTodos = -INF;
     private $menorDeTodos = INF;
-    private $media = 0;
+    private $maioresLances;
 
     public function avalia(Leilao $leilao)
     {
@@ -21,8 +21,20 @@ class Avaliador
             
             $total += $lance->getValor();
         }
+        
+        $this->pegaMaioresLances($leilao);
+    }
 
-        $this->media = $total / count($leilao->getLances());
+    public function pegaMaioresLances(Leilao $leilao)
+    {
+        $lances = $leilao->getLances();
+        usort($lances, function($a, $b) {
+            if ($a->getValor() == $b->getValor()) return 0;
+            
+            return ($a->getValor() < $b->getValor()) ? 1 : -1;
+        });
+
+        $this->maiores = array_slice($lances, 0, 3);
     }
 
     public function getMaiorLance()
@@ -38,6 +50,11 @@ class Avaliador
     public function getMedia()
     {
         return $this->media;
+    }
+
+    public function getMaiores()
+    {
+        return $this->maiores;
     }
 }
 
