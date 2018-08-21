@@ -22,9 +22,26 @@ class Leilao
 			}
 		}
 
-		if ((count($this->lances) == 0) || $this->pegaUltimoLance()->getUsuario() != $lance->getUsuario()) {
+		if ((count($this->lances) == 0) || $this->podeDarLance($lance->getUsuario())) {
 			$this->lances[] = $lance;
 		}
+	}
+
+	private function podeDarLance(Usuario $usuario)
+	{
+		return !($this->pegaUltimoLance()->getUsuario()->getNome() == $usuario->getNome())
+			&& $this->getTotalLancesUsuario($usuario) < 5;
+	}
+
+	private function getTotalLancesUsuario(Usuario $usuario)
+	{
+		$total = 0;
+		foreach ($this->lances as $lance) {
+			if ($lance->getUsuario()->getNome() == $usuario->getNome()) {
+				$total++;
+			} 
+		}
+		return $total;
 	}
 
 	public function pegaUltimoLance()
